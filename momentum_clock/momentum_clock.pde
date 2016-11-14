@@ -20,7 +20,7 @@ float timeDelta = 0.01;
 
 float lastTheta = 0.0;
 float lerp = 0.95;
-float reversreThreshold = 0.0005;
+float reverseThreshold = 0.0005;
 float runningAverage = 0.0;
 boolean increasing = false;
 boolean firstLoop = true;
@@ -36,68 +36,87 @@ void setup() {
 }
 
 void draw() {
-  background(255);
-  stroke(0);
-  fill(0);
-  ellipse(width/2,height/2,width*0.8,height*0.8);
+  //background(255);
+  background(0);  
+
+  // draw the clock face
+  //stroke(0);
+  //fill(0);
   stroke(255);
   fill(255);
-  ellipse(width/2,height/2,15,15);
-  
+  ellipse(width/2,height/2,width*0.8,height*0.8);
+
+  // basic underdamped pendulum with friction force formula
   theta = (exp(-alpha * time) * ((alpha/gamma)*sin(gamma * time) + cos(gamma * time))) + increment;
-  //theta = (exp(-alpha * time) * ((alpha/gamma)*sin(gamma * time) + cos(gamma * time)));
   
+  // track the running average of theta to see if the pendulum has "settled" into one place
   runningAverage = lerp * runningAverage + (1.0 - lerp) * abs(lastTheta - theta);
   
-  if (runningAverage <= reversreThreshold)  {
+  // if the pendulum has essentially stopped moving, flip the time and flasely inflate the running 
+  // average so that it doesn't trigger a reversal immediately
+  if (runningAverage <= reverseThreshold)  {
     timeDelta = -timeDelta;
     runningAverage = 99.0;
   }
   
+  // if this isn't the first time through and the time has regressed to zero, flip the movement
   if (firstLoop == false)  {
     if (time <= 0.0)  {
       timeDelta = -timeDelta;
       increment = increment + thetaDelta;
     }
   }
+  
   if (firstLoop == true)  {
     firstLoop = false;
   }
   
+  // change from cylindrical to rectangular coordinates for minute hand dot
   y = width/2 + cos(theta) * segLength;
   x = height/2 + sin(theta) * segLength; 
-  ellipse(x, y, dotSize, dotSize);
-  ellipse(width/2,height/2+120,dotSize*0.667,dotSize*0.667);
-  stroke(100);
+  
+  // draw the connector segments
+  //stroke(255);
+  //fill(255);
+  stroke(0);
+  fill(0);  
+  strokeCap(ROUND);
   line(width/2,height/2,x,y);
   line(width/2,height/2,width/2,height/2+120);
+  
+  // draw the center dot
+  //ellipse(width/2,height/2,15,15);
+  
+  // draw the minute hand dot and hour hand dot
+  ellipse(x, y, dotSize, dotSize);
+  ellipse(width/2,height/2+120,dotSize*0.667,dotSize*0.667);
+   
+  // update the various loop variables  
   time = time + timeDelta;
   lastTheta = theta;
   position = (-(degrees(increment)+180)) % 360;
   
+ // print out some debug tracking stats
   String stime = nf(time,3,2);
   String stheta = nf(theta,3,2);
   String sx = nf(x,3,2);  
   String sy = nf(y,3,2); 
   String sRunningAverage = nf(runningAverage,2,4);
   String sIncrement = nf(position,3,1); 
-  
   print(stime);
   print("\t");
   print(stheta);
   print("\t");
   print(sx);
   print("\t");
-     print(sy);
+  print(sy);
   print("\t");
   print(sRunningAverage);
   print("\t");
   print(sIncrement);
   println();
-  
-  //delay(2);
 }
 
-void keyPressed() {
-  time = 0.0;
-}
+//void keyPressed() {
+//  time = 0.0;
+//}
