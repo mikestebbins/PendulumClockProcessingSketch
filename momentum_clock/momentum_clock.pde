@@ -4,6 +4,8 @@
  * 
  * A line segment is pushed and pulled by the cursor.
  */
+int initialHours = 10;    //time to start at, in hours, 0-12
+int initialMinutes = 10; // time to start at, in minutes, 0-60
 
 float x = 0;
 float y = 0;
@@ -25,8 +27,12 @@ float runningAverage = 0.0;
 boolean increasing = false;
 boolean firstLoop = true;
 float thetaDelta = -2*PI/60;
-float increment = -PI;
+float increment = -PI - (initialMinutes/60.0*2*PI); // time to start at, in minutes, 0-60;
 float position = 0.0;
+
+
+float xHour = 0.0;
+float yHour = 0.0;
 
 void setup() {
   size(640, 640);
@@ -75,21 +81,29 @@ void draw() {
   y = width/2 + cos(theta) * segLength;
   x = height/2 + sin(theta) * segLength; 
   
+  if (initialHours >= 6)  {
+    xHour = (width/2 + 120.0 * cos((initialHours-3)/12.0*2*PI));
+    yHour = (height/2 + 120.0 * sin((initialHours-3)/12.0*2*PI));
+  }
+  else  {
+    xHour = (width/2 + 120.0 * cos((initialHours-3)/12.0*2*PI));
+    yHour = (height/2 + 120.0 * sin((initialHours-3)/12.0*2*PI));
+  }
+
+  
   // draw the connector segments
-  //stroke(255);
-  //fill(255);
   stroke(0);
   fill(0);  
   strokeCap(ROUND);
   line(width/2,height/2,x,y);
-  line(width/2,height/2,width/2,height/2+120);
+  line(width/2,height/2,xHour,yHour);
   
   // draw the center dot
   //ellipse(width/2,height/2,15,15);
   
   // draw the minute hand dot and hour hand dot
   ellipse(x, y, dotSize, dotSize);
-  ellipse(width/2,height/2+120,dotSize*0.667,dotSize*0.667);
+  ellipse(xHour,yHour,dotSize*0.667,dotSize*0.667);
    
   // update the various loop variables  
   time = time + timeDelta;
