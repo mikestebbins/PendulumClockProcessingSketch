@@ -1,9 +1,3 @@
-/**
- * Follow 1  
- * based on code from Keith Peters. 
- * 
- * A line segment is pushed and pulled by the cursor.
- */
 int initialHours = 10;    //time to start at, in hours, 0-12
 int initialMinutes = 10; // time to start at, in minutes, 0-60
 
@@ -22,7 +16,7 @@ float timeDelta = 0.01;
 
 float lastTheta = 0.0;
 float lerp = 0.95;
-float reverseThreshold = 0.0005;
+float reverseThreshold = 0.001;
 float runningAverage = 0.0;
 boolean increasing = false;
 boolean firstLoop = true;
@@ -43,7 +37,7 @@ void setup() {
 
 void draw() {
   //background(255);
-  background(0);  
+  background(3,63,160);  
 
   // draw the clock face
   //stroke(0);
