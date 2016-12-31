@@ -1,10 +1,11 @@
 int initialHours = 10;    //time to start at, in hours, 0-12
-int initialMinutes = 10; // time to start at, in minutes, 0-60
+int initialMinutes = 50; // time to start at, in minutes, 0-60
 
 float x = 0;
 float y = 0;
-float segLength = 200;
-int dotSize = 40;
+float segLength = 100;
+float hourSegLength = 75;
+int dotSize = 20;
 
 float omega = 2*PI;
 float zeta = 0.05;
@@ -29,10 +30,10 @@ float xHour = 0.0;
 float yHour = 0.0;
 
 void setup() {
-  size(640, 640);
+  size(320, 320);
   frameRate(80);
   strokeCap(ROUND);
-  strokeWeight(5);  
+  strokeWeight(5); 
 }
 
 void draw() {
@@ -45,7 +46,24 @@ void draw() {
   stroke(255);
   fill(255);
   ellipse(width/2,height/2,width*0.8,height*0.8);
-
+  
+  // draw the hour dashes
+  stroke(50);
+  strokeWeight(3);
+  fill(50);
+  float r_inner = width/2 * 0.70;
+  float r_outer = width/2 * 0.75; 
+  for (int i = 0; i < 12; i = i+1) {
+    float tempTheta = i * 30.0; 
+    tempTheta = radians(tempTheta);
+    float temp_x_inner = r_inner * cos(tempTheta) + width/2;
+    float temp_y_inner = r_inner * sin(tempTheta) + height/2;
+    float temp_x_outer = r_outer * cos(tempTheta) + width/2;
+    float temp_y_outer = r_outer * sin(tempTheta) + height/2;
+    line(temp_x_inner, temp_y_inner, temp_x_outer, temp_y_outer);
+  } 
+  strokeWeight(5); 
+  
   // basic underdamped pendulum with friction force formula
   theta = (exp(-alpha * time) * ((alpha/gamma)*sin(gamma * time) + cos(gamma * time))) + increment;
   
@@ -76,24 +94,25 @@ void draw() {
   x = height/2 + sin(theta) * segLength; 
   
   if (initialHours >= 6)  {
-    xHour = (width/2 + 120.0 * cos((initialHours-3)/12.0*2*PI));
-    yHour = (height/2 + 120.0 * sin((initialHours-3)/12.0*2*PI));
+    xHour = (width/2 + hourSegLength * cos((initialHours-3)/12.0*2*PI));
+    yHour = (height/2 + hourSegLength * sin((initialHours-3)/12.0*2*PI));
   }
   else  {
-    xHour = (width/2 + 120.0 * cos((initialHours-3)/12.0*2*PI));
-    yHour = (height/2 + 120.0 * sin((initialHours-3)/12.0*2*PI));
+    xHour = (width/2 + hourSegLength * cos((initialHours-3)/12.0*2*PI));
+    yHour = (height/2 + hourSegLength * sin((initialHours-3)/12.0*2*PI));
   }
 
   
   // draw the connector segments
-  stroke(0);
-  fill(0);  
+  stroke(25);
+  fill(25);  
   strokeCap(ROUND);
+  strokeWeight(3);
   line(width/2,height/2,x,y);
   line(width/2,height/2,xHour,yHour);
   
   // draw the center dot
-  //ellipse(width/2,height/2,15,15);
+  ellipse(width/2,height/2,5,5);
   
   // draw the minute hand dot and hour hand dot
   ellipse(x, y, dotSize, dotSize);
