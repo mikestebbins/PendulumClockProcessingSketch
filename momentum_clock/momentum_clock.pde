@@ -1,4 +1,4 @@
-int initialHours = 10;    //time to start at, in hours, 0-12
+int initialHours = 2;    //time to start at, in hours, 0-12
 int initialMinutes = 50; // time to start at, in minutes, 0-60
 
 float x = 0;
@@ -142,6 +142,9 @@ void draw() {
   print("\t");
   print(sIncrement);
   println();
+  
+  // Saves each frame as line-000001.png, line-000002.png, etc.
+  //saveFrame("line-######.png");
 }
 
 //void keyPressed() {
