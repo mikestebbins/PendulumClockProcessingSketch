@@ -24,7 +24,7 @@ boolean firstLoop = true;
 float thetaDelta = -2*PI/60;
 float increment = -PI - (initialMinutes/60.0*2*PI); // time to start at, in minutes, 0-60;
 float position = 0.0;
-
+float hoursPosition = 0.0;
 
 float xHour = 0.0;
 float yHour = 0.0;
@@ -70,7 +70,7 @@ void draw() {
   // track the running average of theta to see if the pendulum has "settled" into one place
   runningAverage = lerp * runningAverage + (1.0 - lerp) * abs(lastTheta - theta);
   
-  // if the pendulum has essentially stopped moving, flip the time and flasely inflate the running 
+  // if the pendulum has essentially stopped moving, flip the time and falsely inflate the running 
   // average so that it doesn't trigger a reversal immediately
   if (runningAverage <= reverseThreshold)  {
     timeDelta = -timeDelta;
@@ -101,8 +101,10 @@ void draw() {
     xHour = (width/2 + hourSegLength * cos((initialHours-3)/12.0*2*PI));
     yHour = (height/2 + hourSegLength * sin((initialHours-3)/12.0*2*PI));
   }
-
   
+  // have not done anything with making the hour-hand actually move, this is the first step
+  //hoursPosition = initialHours + position/360.0 * 12.0;
+   
   // draw the connector segments
   stroke(25);
   fill(25);  
